@@ -1,0 +1,84 @@
+<div class="translator-container">
+  <div class="pane jp">
+    <div class="pane-header">
+      <h2>日本語</h2>
+      <button type="button" data-lang="ja" class="speak-btn">🔊 読み上げ</button>
+    </div>
+    <textarea id="input-text" rows="10" placeholder="ここに日本語を入力してください"></textarea>
+  </div>
+
+  <div class="pane en">
+    <div class="pane-header">
+      <h2>English</h2>
+      <button type="button" data-lang="en" class="speak-btn">🔊 読み上げ</button>
+    </div>
+    <textarea id="english-text" rows="10" readonly></textarea>
+  </div>
+
+  <div class="pane ko">
+    <div class="pane-header">
+      <h2>한국어</h2>
+      <button type="button" data-lang="ko" class="speak-btn">🔊 読み上げ</button>
+    </div>
+    <textarea id="korean-text" rows="10" readonly></textarea>
+  </div>
+</div>
+
+<script>
+  // ===== 1) 入力イベントでリアルタイム翻訳（デバウンス） =====
+  const inputEl   = document.getElementById("input-text");
+  const englishEl = document.getElementById("english-text");
+  const koreanEl  = document.getElementById("korean-text");
+
+  let timer = null;
+
+  inputEl.addEventListener("input", () => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      const text = inputEl.value;
+
+      fetch("<%= realtime_translation_path %>", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ text: text })
+      })
+      .then(res => res.json())
+      .then(data => {
+        englishEl.value = data.english || "";
+        koreanEl.value  = data.korean  || "";
+      })
+      .catch(err => {
+        console.error("translate error", err);
+      });
+    }, 500); // 0.5秒入力止まったら翻訳
+  });
+
+  // ===== 2) 簡易音声読み上げ（Web Speech API） =====
+  const synth = window.speechSynthesis;
+
+  function speak(text, lang) {
+    if (!text) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = lang;  // "ja-JP", "en-US", "ko-KR" など
+    synth.speak(utter);
+  }
+
+  document.querySelectorAll(".speak-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const lang = btn.dataset.lang;
+      let text = "";
+      if (lang === "ja") text = inputEl.value;
+      if (lang === "en") text = englishEl.value;
+      if (lang === "ko") text = koreanEl.value;
+
+      let speechLang = "ja-JP";
+      if (lang === "en") speechLang = "en-US";
+      if (lang === "ko") speechLang = "ko-KR";
+
+      speak(text, speechLang);
+    });
+  });
+</script>

@@ -1,0 +1,66 @@
+.translator-container {
+    display: flex;
+    flex-direction: row;
+    /* PCでは横並び */
+    gap: 8px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 見出しとボタンを横並びに */
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.pane h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.speak-btn {
+    padding: 4px 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pane textarea {
+    flex: 1;
+    resize: vertical;
+    width: 100%;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* スマホでは縦並び */
+@media (max-width: 768px) {
+    .translator-container {
+        flex-direction: column;
+    }
+}
+
+
+
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
