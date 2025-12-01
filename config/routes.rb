@@ -4,4 +4,6 @@ Rails.application.routes.draw do
 
   # リアルタイム翻訳用のAPI
   post "translation/realtime", to: "translations#realtime", as: :realtime_translation
+  post "tts", to: "tts#create"
+
 end
