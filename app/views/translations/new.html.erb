@@ -8,7 +8,12 @@
   <div class="pane jp">
     <div class="pane-header">
       <h2>日本語</h2>
-      <button type="button" data-lang="ja" class="speak-btn">🔊 読み上げ</button>
+        <div class="pane-actions">
+            <button type="button" id="clear-btn" class="clear-btn">
+            ✨ クリア
+            </button>
+            <button type="button" data-lang="ja" class="speak-btn">🔊 読み上げ</button>
+        </div>
     </div>
     <textarea id="input-text" rows="10" placeholder="ここに日本語を入力してください"></textarea>
   </div>
@@ -35,6 +40,7 @@
   const inputEl   = document.getElementById("input-text");
   const englishEl = document.getElementById("english-text");
   const koreanEl  = document.getElementById("korean-text");
+  const clearBtn  = document.getElementById("clear-btn");
 
   let timer = null;
 
@@ -61,6 +67,19 @@
       });
     }, 500); // 0.5秒入力止まったら翻訳
   });
+
+// ===== ★ 2) クリアボタン =====
+if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+    if (timer) clearTimeout(timer);  // 翻訳待ちタイマー停止
+    inputEl.value   = "";
+    englishEl.value = "";
+    koreanEl.value  = "";
+    inputEl.focus();                // すぐ次の入力ができるように
+    });
+} else {
+    console.warn("clear-btn が見つかりません");
+}
 
   // ===== 2) 音声読み上げ =====
 async function speakFromServer(text, lang) {
