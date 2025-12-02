@@ -17,7 +17,7 @@ class TtsController < ApplicationController
       when "en-US"
         { languageCode: "en-US", name: "en-US-Standard-C" }
       when "ko-KR"
-        { languageCode: "ko-KR", name: "ko-KR-Standard-A" }
+        { languageCode: "ko-KR", name: "ko-KR-Standard-C" }
       else
         { languageCode: lang, name: "" }
       end
